@@ -31,7 +31,7 @@ with aba1:
         turno = st.sidebar.selectbox('Turno', options=('Manhã', 'Tarde', 'Noite'), index=None)
         pp = st.sidebar.number_input('Peças Produzidas', min_value=0)
         pds = st.sidebar.number_input('Peças Defeituosas', min_value=0, max_value=pp)
-        
+    
         botao = st.sidebar.button('Salvar registro')
         if botao:
             novo = {'Data': [data],
@@ -39,12 +39,13 @@ with aba1:
                 'Turno': [turno],
                 'Peças Produzidas': [pp],
                 'Peças Defeituosas': [pds]}
-            novo_df = pd.DataFrame(novo)
-            novo_df.to_csv(arqnome, mode='a', header=False, index=False)
+            novo_df = pd.DataFrame(novo)    
+            df_existente = pd.read_csv(arqnome)
+            df_final = pd.concat([df_existente, novo_df], ignore_index=True)
+            df_final.to_csv(arqnome, index=False)
+
             st.success('Registro salvo! :white_check_mark:')
-            
-            df_fim = pd.read_csv(arqnome)
-            st.dataframe(df_fim)
+            st.dataframe(df_final)
     elif opc == ':mag: Ver todos os registros':
         st.header(':mag: Dados')
         df_fim = pd.read_csv(arqnome)
